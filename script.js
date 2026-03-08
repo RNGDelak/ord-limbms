@@ -1,46 +1,46 @@
 
 function sliceSequence(xInput) {
-  const x = new Decimal(xInput);
-  const EPS = new Decimal("1e-12");
+    const x = new Decimal(xInput);
+    const EPS = new Decimal("1e-12");
 
-  let a = new Decimal(0);
-  let b = new Decimal(1);
+    let a = new Decimal(0);
+    let b = new Decimal(1);
 
-  for (let depth = 1; depth<Decimal.precision+3; depth++) {
-    let len = b.minus(a);
-    let left = a;
-    let size = len.div(3);
-    let right = left.plus(size);
+    for (let depth = 1; depth < Decimal.precision + 3; depth++) {
+        let len = b.minus(a);
+        let left = a;
+        let size = len.div(3);
+        let right = left.plus(size);
 
-    while (true) {
-      if (x.minus(right).abs().lt(EPS)) {
-        return depth;
-      }
+        while (true) {
+            if (x.minus(right).abs().lt(EPS)) {
+                return depth;
+            }
 
-      if (x.lt(right)) {
-        a = left;
-        b = right;
-        break;
-      }
+            if (x.lt(right)) {
+                a = left;
+                b = right;
+                break;
+            }
 
-      left = right;
-      size = size.mul(2).div(3);
-      right = left.plus(size);
+            left = right;
+            size = size.mul(2).div(3);
+            right = left.plus(size);
+        }
     }
-  }
 }
 
 function trimTrailingZeros(str) {
-  let first = true;
+    let first = true;
 
-  return str.replace(/\(([^)]+)\)/g, (_, content) => {
-    if (first) {
-      first = false;
-      return `(${content})`;
-    }
+    return str.replace(/\(([^)]+)\)/g, (_, content) => {
+        if (first) {
+            first = false;
+            return `(${content})`;
+        }
 
-    return `(${content.replace(/(,0)+$/, "")})`;
-  });
+        return `(${content.replace(/(,0)+$/, "")})`;
+    });
 }
 
 function numberToColor(num) {
@@ -59,7 +59,7 @@ function numberToColor(num) {
     return `hsl(${hue}, 70%, ${light}%)`;
 }
 
-function map(x){
+function map(x) {
 
     x = new Decimal(x);
 
@@ -69,7 +69,7 @@ function map(x){
 }
 
 // log_{2/3}(1 - x)
-function unmap(x){
+function unmap(x) {
 
     x = new Decimal(x);
 
@@ -102,8 +102,6 @@ let isInteracting = false;
 let renderVersion = 0;
 let idleTimeout = null;
 
-let lastX = 0;
-let lastY = 0;
 
 // =====================
 // COORDINATES
@@ -127,17 +125,13 @@ function screenToWorld(x) {
 // =====================
 // INTERACTION CONTROL
 // =====================
-
 function startInteraction() {
-
     isInteracting = true;
     renderVersion++;
-
     if (idleTimeout) clearTimeout(idleTimeout);
 }
 
 function endInteraction() {
-
     isInteracting = false;
 
     idleTimeout = setTimeout(() => {
@@ -145,6 +139,47 @@ function endInteraction() {
     }, 120);
 }
 
+// =====================
+// MOUSE
+// =====================
+let mouseDown = false;
+let lastX = 0;
+let lastY = 0;
+
+canvas.addEventListener("mousedown", e => {
+    mouseDown = true;
+    lastX = e.clientX;
+    lastY = e.clientY;
+    startInteraction();
+});
+
+window.addEventListener("mouseup", () => {
+    if (mouseDown) {
+        mouseDown = false;
+        endInteraction();
+    }
+});
+
+window.addEventListener("mousemove", e => {
+    if (!mouseDown) return;
+
+    const dx = new Decimal(e.clientX - lastX);
+    const dy = new Decimal(e.clientY - lastY);
+
+    lastX = e.clientX;
+    lastY = e.clientY;
+
+    offsetX = offsetX.plus(dx.div(zoom));
+
+    const zoomFactor = new Decimal(1).plus(dy.neg().times(0.005));
+    const centerScreen = new Decimal(canvas.width / 2);
+    const centerWorld = screenToWorld(centerScreen);
+
+    zoom = zoom.times(zoomFactor);
+    if (zoom.lte(0)) zoom = new Decimal(1);
+
+    offsetX = offsetX.plus(centerWorld.minus(screenToWorld(centerScreen)));
+});
 
 // =====================
 // TOUCH SUPPORT
@@ -153,7 +188,6 @@ function endInteraction() {
 let touchActive = false;
 
 canvas.addEventListener("touchstart", e => {
-
     if (e.touches.length !== 1) return;
 
     e.preventDefault();
@@ -165,11 +199,9 @@ canvas.addEventListener("touchstart", e => {
     lastY = touch.clientY;
 
     startInteraction();
-
-}, { passive: false });
+}, {passive: false});
 
 canvas.addEventListener("touchmove", e => {
-
     if (!touchActive || e.touches.length !== 1) return;
 
     e.preventDefault();
@@ -182,7 +214,7 @@ canvas.addEventListener("touchmove", e => {
     lastX = touch.clientX;
     lastY = touch.clientY;
 
-    // Horizontal pan
+    // Horizontal pan (same as mouse)
     offsetX = offsetX.plus(dx.div(zoom));
 
     // Vertical drag = zoom
@@ -192,29 +224,107 @@ canvas.addEventListener("touchmove", e => {
     const centerWorld = screenToWorld(centerScreen);
 
     zoom = zoom.times(zoomFactor);
-
     if (zoom.lte(0)) zoom = new Decimal(1);
 
     offsetX = offsetX.plus(
         centerWorld.minus(screenToWorld(centerScreen))
     );
 
-}, { passive: false });
+}, {passive: false});
 
-canvas.addEventListener("touchend", () => {
-
+canvas.addEventListener("touchend", e => {
     if (!touchActive) return;
 
     touchActive = false;
     endInteraction();
-
 });
 
 canvas.addEventListener("touchcancel", () => {
-
     touchActive = false;
     endInteraction();
+});
 
+// =====================
+// KEYBOARD SUPPORT
+// =====================
+
+let keys = {
+    ArrowUp: false,
+    ArrowDown: false,
+    ArrowLeft: false,
+    ArrowRight: false
+};
+
+let keyboardAnimating = false;
+
+function startKeyboardLoop() {
+    if (keyboardAnimating) return;
+    keyboardAnimating = true;
+    startInteraction();
+    requestAnimationFrame(keyboardStep);
+}
+
+function stopKeyboardLoop() {
+    keyboardAnimating = false;
+    endInteraction();
+}
+
+function keyboardStep() {
+    if (!keyboardAnimating) return;
+
+    const panSpeed = new Decimal(35).div(zoom); // pan speed scales with zoom
+    const zoomSpeed = new Decimal(0.07);        // smooth zoom rate
+
+    // PAN
+    if (keys.ArrowLeft) {
+        offsetX = offsetX.plus(panSpeed);
+    }
+    if (keys.ArrowRight) {
+        offsetX = offsetX.minus(panSpeed);
+    }
+
+    // ZOOM
+    if (keys.ArrowUp || keys.ArrowDown) {
+
+        const direction = keys.ArrowUp ? 1 : -1;
+        const zoomFactor = new Decimal(1).plus(zoomSpeed.times(direction));
+
+        const centerScreen = new Decimal(canvas.width / 2);
+        const centerWorld = screenToWorld(centerScreen);
+
+        zoom = zoom.times(zoomFactor);
+        if (zoom.lte(0)) zoom = new Decimal(1);
+
+        offsetX = offsetX.plus(
+            centerWorld.minus(screenToWorld(centerScreen))
+        );
+    }
+
+    requestAnimationFrame(keyboardStep);
+}
+
+window.addEventListener("keydown", e => {
+    if (keys.hasOwnProperty(e.key)) {
+        if (!keys[e.key]) {
+            keys[e.key] = true;
+            startKeyboardLoop();
+        }
+        e.preventDefault();
+    }
+});
+
+window.addEventListener("keyup", e => {
+    if (keys.hasOwnProperty(e.key)) {
+        keys[e.key] = false;
+
+        // stop only if all released
+        if (!keys.ArrowUp && !keys.ArrowDown &&
+            !keys.ArrowLeft && !keys.ArrowRight) {
+            stopKeyboardLoop();
+        }
+
+        e.preventDefault();
+    }
 });
 
 
@@ -307,7 +417,7 @@ function startRender() {
 
     if (end.lte(start)) return;
 
-    const totalSteps = Math.floor(canvas.width*2);//more compact
+    const totalSteps = Math.floor(canvas.width * 2);//more compact
 
     let step = 0;
     let lastOrdinal = null;
@@ -376,8 +486,8 @@ function drawOrdinalTick(ord, sx, zoom) {
 
     const output = trimTrailingZeros(input)
 
-    
-    
+
+
     ctx.fillText(output, sx, midY - 23);
 }
 
@@ -410,7 +520,7 @@ function loop() {
 
     const output = trimTrailingZeros(input)
 
-    console.log(output);document.getElementById("ord").innerHTML = output
+    console.log(output); document.getElementById("ord").innerHTML = output
 
 
     if (isInteracting)
