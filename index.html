@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<meta charset="UTF-8">
+<title>Transfinite Number Line (alpha)</title>
+
+<script src="https://cdn.jsdelivr.net/npm/decimal.js@10.4.3/decimal.min.js"></script>
+
+    <style>
+    html,
+    body {
+        margin: 0;
+        overflow: hidden;
+        background: #111;
+        color: white;
+        background-color: black;
+        font-family: monospace;
+        touch-action: none;
+    }
+
+    canvas {
+        display: block;
+    }
+
+    #ui {
+        color: white !important;
+        position: fixed;
+        bottom: 10px;
+        left: 10px;
+        background: rgba(0,0,0,0);
+        padding: 10px 14px;
+        border-radius: 8px;
+        z-index: 10;
+    }
+    </style>
+</head>
+
+<body>
+    <div id="ui">
+        <div><span id="ord" style="font-size: 20px;font-family: monospace;"></span></div>
+        <div>Zoom: <span id="zoomDisplay"></span></div>
+        <div>FPS: <span id="fpsDisplay"></span></div>
+        <div>World Position: <span id="worldDisplay"></span></div>
+    </div>
+<canvas id="canvas"></canvas>
+    <script src="array.js"></script>
+    <script src="matrix.js"></script>
+    <script src="bm4.js"></script>
+    <script src="lngi.js"></script>
+    <script src = "script.js"></script>
+
+</body>
+</html>
