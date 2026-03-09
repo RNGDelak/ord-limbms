@@ -518,7 +518,7 @@ function computePsi(input){
     if(!result) throw "bad result";
     return result;
   }catch(e){
-    return "Lim(COCF)";
+    return ">Lim(COCF)";
   }
 }
 // =====================
