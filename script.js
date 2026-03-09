@@ -341,7 +341,7 @@ function autoPrecision() {
     const centerWorld = screenToWorld(canvas.width / 2);
     if (!centerWorld || centerWorld.isZero()) return;
 
-    const worldMag = centerWorld.abs().log(2);
+    const worldMag = centerWorld.abs().log(10);
 
     const newPrecision = zoomMag
         .plus(worldMag)
@@ -354,6 +354,46 @@ function autoPrecision() {
     Decimal.set({ precision: clamped });
 }
 
+// =====================
+// DRAW
+// =====================
+
+function drawOrdinalTick(ord, sx, zoom) {
+
+    let color = "white";
+
+    const midY = (canvas.height / canvas.width) * sx;
+
+    ctx.strokeStyle = color;
+    ctx.fillStyle = color;
+
+    ctx.beginPath();
+    ctx.moveTo(sx, midY - 15);
+    ctx.lineTo(sx, midY + 15);
+    ctx.stroke();
+
+    ctx.font = "20px serif";
+    const input = ord[0]
+
+    const output = trimTrailingZeros(input)
+
+
+
+    ctx.fillText(output, sx, midY - 23);
+}
+
+
+function marker() {
+
+    // Set stroke color (green)
+    ctx.strokeStyle = "rgba(0, 0, 255, 0.5)";
+    ctx.lineWidth = 2;
+
+    ctx.beginPath();
+    ctx.moveTo(canvas.width / 2, 0);
+    ctx.lineTo(canvas.width / 2, canvas.height);
+    ctx.stroke();
+}
 
 // =====================
 // PREVIEW RENDER
@@ -463,35 +503,24 @@ function startRender() {
 
 
 
-// =====================
-// DRAW
-// =====================
 
-function drawOrdinalTick(ord, sx, zoom) {
-
-    let color = "white";
-
-    const midY = (canvas.height / canvas.width) * sx;
-
-    ctx.strokeStyle = color;
-    ctx.fillStyle = color;
-
-    ctx.beginPath();
-    ctx.moveTo(sx, midY - 15);
-    ctx.lineTo(sx, midY + 15);
-    ctx.stroke();
-
-    ctx.font = "20px serif";
-    const input = ord[0]
-
-    const output = trimTrailingZeros(input)
-
-
-
-    ctx.fillText(output, sx, midY - 23);
+function parseBMS(s){
+  return [...s.matchAll(/\(([^)]+)\)/g)].map(m=>{
+    let row = m[1].split(',').map(Number);
+    while(row.length < 3) row.push(0); // ensure minimum length
+    return row;
+  });
 }
 
-
+function computePsi(input){
+  try{
+    let result = display(_o(parseBMS(input)));
+    if(!result) throw "bad result";
+    return result;
+  }catch(e){
+    return "Lim(COCF)";
+  }
+}
 // =====================
 // MAIN LOOP
 // =====================
@@ -520,11 +549,12 @@ function loop() {
 
     const output = trimTrailingZeros(input)
 
-    console.log(output); document.getElementById("ord").innerHTML = output
+    document.getElementById("ord").innerHTML = output
+   
+    document.getElementById("psi").innerHTML = computePsi(input);
 
-
-    if (isInteracting)
-        renderPreview();
+    if (isInteracting){
+        renderPreview();marker()}
 
     requestAnimationFrame(loop);
 }
