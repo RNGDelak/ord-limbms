@@ -162,7 +162,7 @@ function display(x,y){
       if(s==''){return `ψ(${display(arg(x))})`;}
       if(l=='p(0)'){return s.replace('x','0');}
       if(s.includes('x')){return s.replace('x',display(cocf_sub(l,'p(0)')));}
-      return `${s}<cocf_sub>${display(l)}</cocf_sub>`;
+      return `${s}<sub>${display(l)}</sub>`;
     }
     return `ψ(${display(arg(x))})`;
   }
