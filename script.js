@@ -364,6 +364,40 @@ function drawOrdinalTick(ord, sx, zoom) {
 
     const midY = (canvas.height / canvas.width) * sx;
 
+    ctx.font = "20px serif";
+
+    const input = ord[0];
+    const output = trimTrailingZeros(input);
+
+    // Determine color
+    if (/\(0\)$/.test(output)) {
+        color = "white";
+    }
+    else if (/\(1,1,1\)$/.test(output)) {
+        color = "lightpink";
+    }
+    else if (/\(1,1\)$/.test(output)) {
+        color = "yellow";
+    }
+    else if (/\(3,1\)$/.test(output)) {
+        color = "cyan";
+    }
+    else if (/\(3,2\)$/.test(output)) {
+        color = "pink";
+    }
+    else if (/\(3,3\)$/.test(output)) {
+        color = "blue";
+    }
+    else if (/\(2,\d+\)$/.test(output)) {
+        color = "green";
+    }
+    else if (/\(\d+,1\)$/.test(output)) {
+        color = "lightgrey";
+    }
+    else if (/\(\d+\)$/.test(output)) {
+        color = "orange";
+    }
+
     ctx.strokeStyle = color;
     ctx.fillStyle = color;
 
@@ -372,16 +406,8 @@ function drawOrdinalTick(ord, sx, zoom) {
     ctx.lineTo(sx, midY + 15);
     ctx.stroke();
 
-    ctx.font = "20px serif";
-    const input = ord[0]
-
-    const output = trimTrailingZeros(input)
-
-
-
     ctx.fillText(output, sx, midY - 23);
 }
-
 
 function marker() {
 
