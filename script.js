@@ -510,8 +510,47 @@ function parseBMS(s){
   });
 }
 
+
+const cOCF_LIMIT = Bms.parse("(0,0,0)(1,1,1)(2,2,1)(3,2)");
+function compareBms(a,b){
+
+    const A = a.s
+    const B = b.s
+
+    const len = Math.min(A.length,B.length)
+
+    for(let i=0;i<len;i++){
+
+        const rowA = A[i]
+        const rowB = B[i]
+
+        const rlen = Math.min(rowA.length,rowB.length)
+
+        for(let j=0;j<rlen;j++){
+
+            if(rowA[j].lt(rowB[j])) return -1
+            if(rowA[j].gt(rowB[j])) return 1
+        }
+
+        if(rowA.length < rowB.length) return -1
+        if(rowA.length > rowB.length) return 1
+    }
+
+    if(A.length < B.length) return -1
+    if(A.length > B.length) return 1
+
+    return 0
+}
+
+function largerThanLimit(bms){
+
+    return compareBms(bms, cOCF_LIMIT) === 1
+}
+
 function computePsi(input){
-  try{
+if (largerThanLimit(Bms.parse((input)))) return ">Lim(COCF)";
+    
+  try{  
     let result = display(_o(parseBMS(input)));
     if(!result) throw "bad result";
     return result;
@@ -548,7 +587,7 @@ function loop() {
     const output = trimTrailingZeros(input)
 
     document.getElementById("ord").innerHTML = output
-   
+
     document.getElementById("psi").innerHTML = computePsi(input);
 
     if (isInteracting){
