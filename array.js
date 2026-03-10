@@ -179,18 +179,7 @@ Array.prototype.clone = function () {
     return this.map(v => v instanceof Decimal ? new Decimal(v) : v)
 }
 
-/* ---------------- multidimensional indexing ---------------- */
 
-Array.prototype.at = function (idx) {
-
-    var r = this
-
-    for (var i = 0; i < idx.length; i++) {
-        r = r[idx[i]]
-    }
-
-    return r
-}
 
 /* ---------------- zeros ---------------- */
 
