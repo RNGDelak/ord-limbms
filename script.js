@@ -85,6 +85,7 @@ let offsetX = new Decimal(-1.5);
 let isInteracting = false;
 let renderVersion = 0;
 let idleTimeout = null;
+let config = {previewstep : 50;}
 
 
 // =====================
@@ -393,7 +394,7 @@ function renderPreview() {
 
     if (end.lte(start)) return;
 
-    const steps = 50;
+    const steps = config.previewstep;
     let lastOrdinal = null;
 
     for (let step = 0; step <= steps; step++) {
