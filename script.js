@@ -1,4 +1,5 @@
-
+let panspeed = 35
+let zoomspeed = 0.07
 function sliceSequence(xInput) {
     const x = new Decimal(xInput);
     const EPS = new Decimal("1e-12");
@@ -272,8 +273,8 @@ function stopKeyboardLoop() {
 function keyboardStep() {
     if (!keyboardAnimating) return;
 
-    const panSpeed = new Decimal(35).div(zoom); // pan speed scales with zoom
-    const zoomSpeed = new Decimal(0.07);        // smooth zoom rate
+    const panSpeed = new Decimal(panspeed).div(zoom); // pan speed scales with zoom
+    const zoomSpeed = new Decimal(zoomspeed);        // smooth zoom rate
 
     // PAN
     if (keys.ArrowLeft) {
