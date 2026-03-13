@@ -79,7 +79,7 @@ resize();
 // STATE
 // =====================
 
-let zoom = new Decimal(100);
+let zoom = new Decimal(1000);
 let offsetX = new Decimal(0.5);
 
 let isInteracting = false;
