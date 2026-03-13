@@ -32,6 +32,10 @@ function sliceSequence(xInput) {
 }
 
 function trimTrailingZeros(str) {
+
+    // Only process real BMS tuples like "(0,1,2)"
+    if (!str || !str.startsWith("(")) return str;
+
     let first = true;
 
     return str.replace(/\(([^)]+)\)/g, (_, content) => {
@@ -58,27 +62,6 @@ function numberToColor(num) {
         .toNumber();
 
     return `hsl(${hue}, 70%, ${light}%)`;
-}
-
-function map(x) {
-
-    x = new Decimal(x);
-
-    return new Decimal(1).minus(
-        new Decimal(2).div(3).pow(x)
-    );
-}
-
-// log_{2/3}(1 - x)
-function unmap(x) {
-
-    x = new Decimal(x);
-
-    return new Decimal(1).minus(x)
-        .ln()
-        .div(
-            new Decimal(2).div(3).ln()
-        );
 }
 
 
@@ -405,7 +388,7 @@ function renderPreview() {
     const worldLeft = screenToWorld(0);
     const worldRight = screenToWorld(canvas.width);
 
-    const start = Decimal.max(new Decimal(1), worldLeft);
+    const start = Decimal.max(new Decimal(0), worldLeft);
     const end = worldRight;
 
     if (end.lte(start)) return;
@@ -451,7 +434,7 @@ function startRender() {
     const worldLeft = screenToWorld(0);
     const worldRight = screenToWorld(canvas.width);
 
-    const start = Decimal.max(new Decimal(1), worldLeft);
+    const start = Decimal.max(new Decimal(0), worldLeft);
     const end = worldRight;
 
     if (end.lte(start)) return;
@@ -549,15 +532,18 @@ function largerThanLimit(bms){
 }
 
 function computePsi(input){
-if (largerThanLimit(Bms.parse((input)))) return ">Lim(COCF)";
+
+    if (typeof input === "string" && input.includes("L")) return input;
+
+    if (largerThanLimit(Bms.parse(input))) return ">Lim(COCF)";
     
-  try{  
-    let result = display(_o(parseBMS(input)));
-    if(!result) throw "bad result";
-    return result;
-  }catch(e){
-    return ">Lim(COCF)";
-  }
+    try {  
+        let result = display(_o(parseBMS(input)));
+        if(!result) throw "bad result";
+        return result;
+    } catch(e) {
+        return ">Lim(COCF)";
+    }
 }
 // =====================
 // MAIN LOOP
@@ -581,7 +567,7 @@ function loop() {
     let centerWorld = screenToWorld(canvas.width / 2);
     document.getElementById("worldDisplay").textContent =
         centerWorld.toPrecision(3)
-    const safeCenter = Decimal.max(new Decimal(1), centerWorld);
+    const safeCenter = Decimal.max(new Decimal(0), centerWorld);
 
     const input = lngi(safeCenter)[0];
 
