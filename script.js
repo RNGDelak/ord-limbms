@@ -85,7 +85,7 @@ let offsetX = new Decimal(-1.5);
 let isInteracting = false;
 let renderVersion = 0;
 let idleTimeout = null;
-let config = {previewstep : 50;}
+let config = {previewstep : 50};
 
 
 // =====================
