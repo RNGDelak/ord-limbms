@@ -80,7 +80,7 @@ resize();
 // =====================
 
 let zoom = new Decimal(500);
-let offsetX = new Decimal(-1.5);
+let offsetX = new Decimal(-0.5);
 
 let isInteracting = false;
 let renderVersion = 0;
