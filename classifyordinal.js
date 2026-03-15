@@ -255,7 +255,7 @@ function ordclass_masterClassify(M){
 
     if(ordclass_isImpredicative(M)) return "Impredicative"
 
-    if(ordclass_isVeblen(M)) return "Veblen"
+    if(ordclass_isVeblenOrdinal(M)) return "Veblen"
 
     if(ordclass_isEpsilonOrdinal(M)) return "Epsilon"
 
