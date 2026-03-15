@@ -297,6 +297,15 @@ function autoPrecision() {
 // DRAW
 // =====================
 
+
+function parseBMS(s){
+  return [...s.matchAll(/\(([^)]+)\)/g)].map(m=>{
+    let row = m[1].split(',').map(Number);
+    while(row.length < 3) row.push(0); // ensure minimum length
+    return row;
+  });
+}
+
 function drawOrdinalTick(ord, sx, zoom) {
     const input = ord[0];
     const output = trimTrailingZeros(input);
@@ -443,14 +452,6 @@ function startRender() {
 
 
 
-function parseBMS(s){
-  return [...s.matchAll(/\(([^)]+)\)/g)].map(m=>{
-    let row = m[1].split(',').map(Number);
-    while(row.length < 3) row.push(0); // ensure minimum length
-    return row;
-  });
-}
-
 
 const cOCF_LIMIT = Bms.parse("(0,0,0)(1,1,1)(2,2,1)(3,2)");
 function compareBms(a,b){
@@ -532,9 +533,13 @@ function loop() {
 
     const output = trimTrailingZeros(input)
 
+    const color = getColor(input)
+
     document.getElementById("ord").innerHTML = output
+    document.getElementById("ord").style.color = color
 
     document.getElementById("psi").innerHTML = computePsi(input);
+    document.getElementById("psi").style.color = color
 
     if (isInteracting){
         renderPreview();marker()}
