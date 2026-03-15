@@ -21,18 +21,19 @@ function unmap(x) {
 function gen_init_bms(x) {
     x = new Decimal(x)
 
-    const n = x.toNumber()
+    let s = ""
+    let e = ""
+    let i = new Decimal(0)
 
-    let s = []
-    let e = []
-
-    for (let i = 0; i < n; i++) {
-        s.push("0,")
-        e.push("1,")
+    while (i.lt(x)) {
+        s = s + "0,"
+        e = e + "1,"
+        i = i.plus(1)
     }
 
-    return "(" + s.join("") + "0)(" + e.join("") + "1)[60]"
+    return "(" + s + "0)(" + e + "1)[60]"
 }
+
 
 function lngi(x) {
 
