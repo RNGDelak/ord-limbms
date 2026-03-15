@@ -1,35 +1,5 @@
 let panspeed = 35
 let zoomspeed = 0.07
-function sliceSequence(xInput) {
-    const x = new Decimal(xInput);
-    const EPS = new Decimal("1e-12");
-
-    let a = new Decimal(0);
-    let b = new Decimal(1);
-
-    for (let depth = 1; depth < Decimal.precision + 3; depth++) {
-        let len = b.minus(a);
-        let left = a;
-        let size = len.div(3);
-        let right = left.plus(size);
-
-        while (true) {
-            if (x.minus(right).abs().lt(EPS)) {
-                return depth;
-            }
-
-            if (x.lt(right)) {
-                a = left;
-                b = right;
-                break;
-            }
-
-            left = right;
-            size = size.mul(2).div(3);
-            right = left.plus(size);
-        }
-    }
-}
 
 function trimTrailingZeros(str) {
 
@@ -46,22 +16,6 @@ function trimTrailingZeros(str) {
 
         return `(${content.replace(/(,0)+$/, "")})`;
     });
-}
-
-function numberToColor(num) {
-
-    num = new Decimal(num);
-
-    const hue = num
-        .times(137.508)
-        .mod(360)
-        .toNumber();
-
-    const light = new Decimal(55)
-        .plus(num.mod(15))
-        .toNumber();
-
-    return `hsl(${hue}, 70%, ${light}%)`;
 }
 
 
@@ -344,15 +298,14 @@ function autoPrecision() {
 // =====================
 
 function drawOrdinalTick(ord, sx, zoom) {
-
-    let color = "white";
+    const input = ord[0];
+    const output = trimTrailingZeros(input);
+    let color = getColor(output)
 
     const midY = (canvas.height / canvas.width) * sx;
 
     ctx.font = "20px serif";
 
-    const input = ord[0];
-    const output = trimTrailingZeros(input);
 
 
     ctx.strokeStyle = color;
