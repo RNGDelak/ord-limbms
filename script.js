@@ -383,6 +383,8 @@ function startRender() {
     renderVersion++;
     const currentVersion = renderVersion;
 
+    const renderStart = performance.now(); // start timer
+
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     const worldLeft = screenToWorld(0);
@@ -393,7 +395,7 @@ function startRender() {
 
     if (end.lte(start)) return;
 
-    const totalSteps = Math.floor(canvas.width * 2);//more compact
+    const totalSteps = Math.floor(canvas.width * 2);
 
     let step = 0;
     let lastOrdinal = null;
@@ -429,13 +431,14 @@ function startRender() {
 
         if (step <= totalSteps) {
             requestAnimationFrame(processChunk);
+        } else {
+            // rendering finished
+            renderTime = (performance.now() - renderStart) / 1000;
         }
     }
 
     processChunk();
 }
-
-
 
 
 
@@ -503,6 +506,7 @@ function computePsi(input){
 // MAIN LOOP
 // =====================
 let fps = 0, lastTime = performance.now(), frames = 0;
+let renderTime = 0;
 
 function loop() {
 
@@ -516,8 +520,9 @@ function loop() {
     }
 
     document.getElementById("zoomDisplay").textContent = zoom.toPrecision(6);
-    document.getElementById("fpsDisplay").textContent = fps;
-
+    document.getElementById("fpsDisplay").textContent =
+    fps + " (Rendered in : " + renderTime.toFixed(5) + "s)";
+    
     let centerWorld = screenToWorld(canvas.width / 2);
     document.getElementById("worldDisplay").textContent =
         centerWorld.toPrecision(3)
