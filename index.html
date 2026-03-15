@@ -32,6 +32,17 @@
         border-radius: 8px;
         z-index: 10;
     }
+
+    #legend {
+    	position: fixed;
+    	top: 10px;
+    	right: 10px;
+  	font-family: serif;
+    	font-size: 24px;
+    	line-height: 1;
+    	text-align: right;
+    	pointer-events: none;
+    }	
     </style>
 </head>
 
@@ -42,6 +53,19 @@
         <div>Zoom: <span id="zoomDisplay"></span></div>
         <div>FPS: <span id="fpsDisplay"></span></div>
         <div>World Position: <span id="worldDisplay"></span></div>
+    </div>
+    <div id="legend">
+	<div style="color:red">Successor Ordinals</div>
+	<div style="color:orange">Limit Ordinals</div>
+	<div style="color:yellow">Power of ω</div>
+	<div style="color:white">Tower of ω</div>
+	<div style="color:#00FF00">ε<sub>0</sub> Ordinals</div>
+	<div style="color:cyan">Veblen Ordinals</div>
+	<div style="color:#ff73f6">Feferman–Schütte Ordinals</div>
+	<div style="color:blue">Bachmann–Howard Ordinals</div>
+	<div style="color:grey">Buchholz Ordinals</div>
+	<div style="color:lightblue">Primitves Ordinals</div>
+
     </div>
 <canvas id="canvas"></canvas>
     <script src="decimal.js"></script>
