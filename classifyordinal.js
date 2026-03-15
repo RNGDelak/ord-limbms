@@ -249,25 +249,23 @@ function ordclass_classifyOrdinal(M){
 
 function ordclass_masterClassify(M){
 
-    const c = ordclass_classifyOrdinal(M)
+    if(ordclass_isBuchholz(M)) return "Buchholz"
 
-    if(c.buchholz) return "Buchholz"
+    if(ordclass_isBHO(M)) return "BHO"
 
-    if(c.BHO) return "BHO"
+    if(ordclass_isImpredicative(M)) return "Impredicative"
 
-    if(c.impredicative) return "Impredicative"
+    if(ordclass_isVeblen(M)) return "Veblen"
 
-    if(c.veblen) return "Veblen"
+    if(ordclass_isEpsilonOrdinal(M)) return "Epsilon"
 
-    if(c.epsilon) return "Epsilon"
+    if(ordclass_isTowerOfOmega(M)) return "TowerOfOmega"
 
-    if(c.towerOfOmega) return "TowerOfOmega"
+    if(ordclass_isPowerOfOmega(M)) return "PowerOfOmega"
 
-    if(c.powerOfOmega) return "PowerOfOmega"
+    if(ordclass_isLimitOrdinal(M)) return "Limit"
 
-    if(c.limit) return "Limit"
-
-    if(c.successor) return "Successor"
+    if(ordclass_isSuccessorOrdinal(M)) return "Successor"
 
     return "Unknown"
 }
