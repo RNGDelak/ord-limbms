@@ -190,9 +190,8 @@ function ordclass_isBuchholz(M){
     let p = ordclass_P(M,0)
 
     return ordclass_matrixGE(p,[
-        [D(1),D(1)],
-        [D(2),D(2)],
-        [D(2),D(1)]
+        [D(1),D(1),D(1)],
+        [D(2),D(2),D(1)],
     ])
 }
 
