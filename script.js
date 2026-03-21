@@ -492,14 +492,14 @@ function computePsi(input){
 
     if (typeof input === "string" && input.includes("L")) return input;
 
-    if (largerThanLimit(Bms.parse(input))) return ">Lim(COCF)";
+    if (largerThanLimit(Bms.parse(input))) return "";
     
     try {  
         let result = display(_o(parseBMS(input)));
         if(!result) throw "bad result";
         return result;
     } catch(e) {
-        return ">Lim(COCF)";
+        return "";
     }
 }
 // =====================
