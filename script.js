@@ -525,7 +525,7 @@ function loop() {
     
     let centerWorld = screenToWorld(canvas.width / 2);
     document.getElementById("worldDisplay").textContent =
-        centerWorld.toPrecision(3)
+        centerWorld.toPrecision(zoom.log(10).floor().toNumber())
     const safeCenter = Decimal.max(new Decimal(0), centerWorld);
 
     const input = lngi(safeCenter)[0];
