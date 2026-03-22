@@ -114,7 +114,7 @@ window.addEventListener("mousemove", e => {
     const centerWorld = screenToWorld(centerScreen);
 
     zoom = zoom.times(zoomFactor);
-    if (zoom.lte(0)) zoom = new Decimal(1);
+    if (zoom.lt(100)) zoom = new Decimal(100);
 
     offsetX = offsetX.plus(centerWorld.minus(screenToWorld(centerScreen)));
 });
@@ -162,7 +162,7 @@ canvas.addEventListener("touchmove", e => {
     const centerWorld = screenToWorld(centerScreen);
 
     zoom = zoom.times(zoomFactor);
-    if (zoom.lte(0)) zoom = new Decimal(1);
+    if (zoom.lt(100)) zoom = new Decimal(100);
 
     offsetX = offsetX.plus(
         centerWorld.minus(screenToWorld(centerScreen))
@@ -231,7 +231,7 @@ function keyboardStep() {
         const centerWorld = screenToWorld(centerScreen);
 
         zoom = zoom.times(zoomFactor);
-        if (zoom.lte(0)) zoom = new Decimal(1);
+        if (zoom.lt(100)) zoom = new Decimal(100);
 
         offsetX = offsetX.plus(
             centerWorld.minus(screenToWorld(centerScreen))
