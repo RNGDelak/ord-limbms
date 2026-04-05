@@ -452,7 +452,7 @@ function startRender() {
 
 
 
-const cOCF_LIMIT = Bms.parse("(0,0,0)(1,1,1)(2,2,1)(3,2)");
+const cOCF_LIMIT = Bms.parse("(0,0,0)(1,1,1)(2,2)");
 function compareBms(a,b){
 
     const A = a.s
