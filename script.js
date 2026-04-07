@@ -274,7 +274,7 @@ function autoPrecision() {
 
     if (!zoom || zoom.lte(0)) return;
 
-    const zoomMag = zoom.log(10);
+    const zoomMag = zoom.log(2);
 
     const centerWorld = screenToWorld(canvas.width / 2);
     if (!centerWorld || centerWorld.isZero()) return;
