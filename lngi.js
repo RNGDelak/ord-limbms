@@ -63,7 +63,7 @@ function lngi(x) {
     let l = new Decimal(0)
     let m = new Decimal(0)
 
-    while (l.lt(Decimal.precision*Math.log2(10))) {
+    while (l.lt(Decimal.precision)) {
 
         if (j.lt(0.5)) {
 
