@@ -270,7 +270,7 @@ function ordclass_masterClassify(M){
 }
 
 function getColor(input , arr) {
-  if (input === "Lim(BMS)") {return "lightblue";}
+  if (input === "Lim(BMS)") {return "darkblue";}
   if (input === "0") {
     return "lightblue";
   }

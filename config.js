@@ -1,1 +1,1 @@
-let config = {previewstep : 50};
+let config = {previewstep : 250};
