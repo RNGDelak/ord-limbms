@@ -803,3 +803,4 @@ function Conv_LPrSS(ord) {
 ## Implement
 - Check ordinal.js for the Implementation of this construction with bound ordinal **Lim(BMS)**
 - Check [https://github.com/RNGDelak/ord-transposition](https://github.com/RNGDelak/ord-transposition) for more notations
+- - Check [https://github.com/RNGDelak/ord-generalized](https://github.com/RNGDelak/ord-generalized) for a visualizer tool
